@@ -36,7 +36,7 @@ pose_pairs = [(1, 2), (2, 3), (3, 4),  # 왼팔
 # sample_num = 0    
 # captured_num = 0
     
-# loop through frames
+# #loop through frames
 # while captured_num<=30:
     
 #     # read frame from webcam 
@@ -48,27 +48,28 @@ pose_pairs = [(1, 2), (2, 3), (3, 4),  # 왼팔
  
 #     # display output
 #     cv2.imshow("captured frames", frame)
-    ###
+#     ##
 #     if sample_num == 4:
 #         captured_num = captured_num + 1
 #         cv2.imwrite('./person/img'+str(captured_num)+'.jpg', frame) # 
 #         sample_num = 0
         
     
-#     # # press "Q" to stop
-#     # if cv2.waitKey(1) & 0xFF == ord('q'):
-#     #     break
+# #     # # press "Q" to stop
+# #     # if cv2.waitKey(1) & 0xFF == ord('q'):
+# #     #     break
     
-# # release resources
+# # # release resources
 # webcam.release()
  
 #
 ###
 # 네트워크 생성
+#key = cv2.waitKey(10000)
 
-path_dir1 = './person/'
-img_files = os.listdir(path_dir1)
-
+#path_dir1 = './person/'
+#img_files = os.listdir(path_dir1)
+img_files = ['pose9.jpg', 'pose10.jpg']
 net = cv2.dnn.readNet(model, config)
 
 if net.empty():
