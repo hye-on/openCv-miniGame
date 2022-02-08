@@ -1,6 +1,6 @@
 import cv2
 
-Known_distance = 66.5 #centimeter
+Known_distance = 60 #centimeter
 Known_width = 14.3
 
 #Colors
