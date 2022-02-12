@@ -16,14 +16,42 @@ TIMER = int(5)
 # Open the camera
 cap = cv2.VideoCapture(0)
   
+
+
+#위치 바꾼부분
+x, y, w, h =115, 220, 100, 100
+rc = (x, y, w, h)
+
+x2, y2, w2, h2 =370, 220 , 100, 100
+rc2 = (x2, y2, w2, h2) 
+
+ret, img = cap.read()
+
  
+roi = img[y:y+h, x:x+w]
+roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+roi2 = img[y2:y2+h2, x2:x2+w2]
+roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
+
+# HS 히스토그램 계산
+channels = [0, 1]
+ranges = [0, 180, 0, 256]
+hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
+hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
+
+# Mean Shift 알고리즘 종료 기준
+#term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+# CamShift 알고리즘 종료 기준
+term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+
 while True:
 
-    x, y, w, h = 170, 350, 50, 50
-    rc = (x, y, w, h)
+    # x, y, w, h =115, 220, 100, 100
+    # rc = (x, y, w, h)
 
-    x2, y2, w2, h2 = 390, 350, 50, 50
-    rc2 = (x2, y2, w2, h2) 
+    # x2, y2, w2, h2 =370, 220 , 100, 100
+    # rc2 = (x2, y2, w2, h2) 
     # Read and display each frame
     ret, img = cap.read()
     img = cv2.flip(img,1)
@@ -46,6 +74,7 @@ while True:
     
         while TIMER >= 0:
             ret, img = cap.read()
+            
             img = cv2.flip(img,1)
             test="Please recognize the hand inside the square."
             test2="The game is about to start!"
@@ -79,49 +108,63 @@ while True:
  
         while TIMER < 0:
             ret, img = cap.read()
+            ret2=ret
             img = cv2.flip(img,1)
-            cv2.rectangle(img, rc, (0, 0, 255), 2)
-            cv2.rectangle(img, rc2, (0, 0, 255), 2)
+            if not ret:
+                break
+            #cv2.rectangle(img, rc, (0, 0, 255), 2)
+            #cv2.rectangle(img, rc2, (0, 0, 255), 2)
+            #관심영역이 계속 바뀌는데 while을 돌때마다 초기화 해서 제대로 인식 못했던것.
+            # roi = img[y:y+h, x:x+w]
+            # roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-            roi = img[y:y+h, x:x+w]
-            roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+            # roi2 = img[y2:y2+h2, x2:x2+w2]
+            # roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
 
-            roi2 = img[y2:y2+h2, x2:x2+w2]
-            roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
+            # # HS 히스토그램 계산
+            # channels = [0, 1]
+            # ranges = [0, 180, 0, 256]
+            # hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
+            # hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
 
-            # HS 히스토그램 계산
-            channels = [0, 1]
-            ranges = [0, 180, 0, 256]
-            hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
-            hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
-
-            # Mean Shift 알고리즘 종료 기준
-            term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+            # # Mean Shift 알고리즘 종료 기준
+            # term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
 
             # HS 히스토그램에 대한 역투영
             frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             backproj = cv2.calcBackProject([frame_hsv], channels, hist, ranges, 1)
-            frame_hsv2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+           #삭제
             backproj2 = cv2.calcBackProject([frame_hsv], channels, hist2, ranges, 1)
 
            # Mean Shift
-            _, rc = cv2.meanShift(backproj, rc, term_crit)
-            _, rc2 = cv2.meanShift(backproj2, rc2, term_crit)
+            # _, rc = cv2.meanShift(backproj, rc, term_crit)
+            # _, rc2 = cv2.meanShift(backproj2, rc2, term_crit)
 
  
+            # CamShift
+            ret, rc = cv2.CamShift(backproj, rc, term_crit)
+            ret2, rc2 = cv2.CamShift(backproj2, rc2, term_crit)
+            # 추적 결과 화면 출력
+            cv2.rectangle(img, rc, (0, 0, 255), 2)
+            cv2.rectangle(img, rc2, (0, 0, 255), 2)
+            cv2.ellipse(img, ret, (0, 255, 0), 2)
+            cv2.ellipse(img, ret, (0, 255, 0), 2)
+           
             # Display the clicked frame for 2
             # sec.You can increase time in
             # waitKey also
             cv2.imshow('a', img)
  
             # time for which image displayed
-            cv2.waitKey(100)
+            #cv2.waitKey(100)
  
-
+        # Press Esc to exit
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                cap.release()
+                cv2.destroyAllWindows() 
+                break
  
-    # Press Esc to exit
-    elif k == 27:
-        break
+    
 
     
 

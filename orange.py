@@ -1,10 +1,16 @@
+import cv2
+import time
+from itertools import count
 import sys
 import numpy as np
 import cv2
+import time
+from datetime import datetime
+import threading  
 
+TIMER = int(5)
+  
 
-# 비디오 파일 열기
-#cap = cv2.VideoCapture('camshift.avi')
 
 # open webcam (웹캠 열기)
 webcam = cv2.VideoCapture(0)
@@ -18,24 +24,62 @@ if not webcam.isOpened():
 #      sys.exit()
 
 # 초기 사각형 영역: (x, y, w, h)
-x, y, w, h = 135, 220, 100, 100
+x, y, w, h = 115, 220, 100, 100
 rc = (x, y, w, h)
 
 # 초기 두번째 사각형 영역: (x2, y2, w, h)
-x2, y2 =  350, 220 
+x2, y2 =  370, 220 
 rc2 = (x2, y2, w, h)
 
 ret, frame = webcam.read()
+
+
 
 if not ret:
     print('frame read failed!')
     sys.exit()
 
+
+#1
+#  back = cv2.cvtColor(back, cv2.COLOR_BGR2GRAY)
+#  frame = cv2.GaussianBlur(back, (0, 0), 1.0)
+
+# # 비디오 매 프레임 처리
+# while True:
+#     ret, frame = webcam.read()
+
+#     if not ret:
+#         break
+
+#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+#     gray = cv2.GaussianBlur(gray, (0, 0), 1.0)
+
+#     # 차영상 구하기 & 이진화
+#     diff = cv2.absdiff(gray, back)
+#     _, diff = cv2.threshold(diff, 30, 255, cv2.THRESH_BINARY)
+
+#     # 레이블링을 이용하여 바운딩 박스 표시
+#     cnt, _, stats, _ = cv2.connectedComponentsWithStats(diff)
+
+#     for i in range(1, cnt):
+#         x, y, w, h, s = stats[i]
+
+#         if s < 5000:
+#             continue
+
+#         cv2.rectangle(frame, (x, y, w, h), (0, 0, 255), 2)
+
+#     cv2.imshow('frame', frame)
+#     cv2.imshow('diff', diff)
+
+#     if cv2.waitKey(30) == 27:
+#         break
+##
 roi = frame[y:y+h, x:x+w]
 roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
 roi2 = frame[y2:y2+h, x2:x2+w]
-roi_hsv2 = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
 
 # HS 히스토그램 계산
 channels = [0, 1]
@@ -53,7 +97,7 @@ while webcam.isOpened():
 # 비디오 매 프레임 처리
 #while True:
     ret, frame = webcam.read()
-
+    frame = cv2.flip(frame,1)
     if not ret:
         break
 
@@ -64,14 +108,18 @@ while webcam.isOpened():
     backproj2 = cv2.calcBackProject([frame_hsv], channels, hist2, ranges, 1)
 
     # Mean Shift
-    _, rc = cv2.meanShift(backproj, rc, term_crit)
+    # _, rc = cv2.meanShift(backproj, rc, term_crit)
 
-    _, rc2 = cv2.meanShift(backproj2, rc2, term_crit)
+    # _, rc2 = cv2.meanShift(backproj2, rc2, term_crit)
 
+    # CamShift
+    ret, rc = cv2.CamShift(backproj, rc, term_crit)
+    ret2, rc2 = cv2.CamShift(backproj2, rc2, term_crit)
     # 추적 결과 화면 출력
     cv2.rectangle(frame, rc, (0, 0, 255), 2)
     cv2.rectangle(frame, rc2, (0, 0, 255), 2)
-
+    cv2.ellipse(frame, ret, (0, 255, 0), 2)
+    cv2.ellipse(frame, ret2, (0, 255, 0), 2)
     cv2.imshow('frame', frame)
 
 
