@@ -7,6 +7,8 @@ import cv2
 import time
 from datetime import datetime
 import threading  
+from matplotlib import pyplot as plt
+
  
 # SET THE COUNTDOWN TIMER
 # for simplicity we set it to 3
@@ -28,29 +30,32 @@ rc2 = (x2, y2, w2, h2)
 ret, img = cap.read()
 
  
-roi = img[y:y+h, x:x+w]
-roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+# roi = img[y:y+h, x:x+w]
+# roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-roi2 = img[y2:y2+h2, x2:x2+w2]
-roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
+# roi2 = img[y2:y2+h2, x2:x2+w2]
+# roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
 
-# HS 히스토그램 계산
-channels = [0, 1]
-ranges = [0, 180, 0, 256]
-hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
-hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
+# # HS 히스토그램 계산
+# channels = [0, 1]
+# ranges = [0, 180, 0, 256]
+# hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
+# hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
 
-# Mean Shift 알고리즘 종료 기준
-#term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
-# CamShift 알고리즘 종료 기준
-term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+# # Mean Shift 알고리즘 종료 기준
+# #term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+# # CamShift 알고리즘 종료 기준
+# term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+
+# plt.hist(img.ravel(), 256, [0,256]); 
+# plt.show()
 
 while True:
 
-    # x, y, w, h =115, 220, 100, 100
+    # x, y, w, h =115, 220, 50, 50
     # rc = (x, y, w, h)
 
-    # x2, y2, w2, h2 =370, 220 , 100, 100
+    # x2, y2, w2, h2 =370, 220 , 50, 50
     # rc2 = (x2, y2, w2, h2) 
     # Read and display each frame
     ret, img = cap.read()
@@ -71,7 +76,7 @@ while True:
     # if key pressed is q
     if k == ord('s'):
         prev = time.time()
-    
+ 
         while TIMER >= 0:
             ret, img = cap.read()
             
@@ -105,7 +110,29 @@ while True:
             if cur-prev >= 1:
                 prev = cur
                 TIMER = TIMER-1
- 
+
+
+            if TIMER==1:
+                roi = img[y:y+h, x:x+w]
+                roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+                roi2 = img[y2:y2+h2, x2:x2+w2]
+                roi_hsv2 = cv2.cvtColor(roi2, cv2.COLOR_BGR2HSV)
+
+                # HS 히스토그램 계산
+                channels = [0, 1]
+                ranges = [0, 180, 0, 256]
+                hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
+                hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
+
+                # Mean Shift 알고리즘 종료 기준
+                #term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+                # CamShift 알고리즘 종료 기준
+                term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+
+             
+                
+
         while TIMER < 0:
             ret, img = cap.read()
             ret2=ret
@@ -142,13 +169,14 @@ while True:
 
  
             # CamShift
+            #rc 입력이자 출력
             ret, rc = cv2.CamShift(backproj, rc, term_crit)
             ret2, rc2 = cv2.CamShift(backproj2, rc2, term_crit)
             # 추적 결과 화면 출력
             cv2.rectangle(img, rc, (0, 0, 255), 2)
             cv2.rectangle(img, rc2, (0, 0, 255), 2)
             cv2.ellipse(img, ret, (0, 255, 0), 2)
-            cv2.ellipse(img, ret, (0, 255, 0), 2)
+            cv2.ellipse(img, ret2, (0, 255, 0), 2)
            
             # Display the clicked frame for 2
             # sec.You can increase time in
