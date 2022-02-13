@@ -157,7 +157,7 @@ while True:
             # # Mean Shift 알고리즘 종료 기준
             # term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
 
-            # HS 히스토그램에 대한 역투영
+            # HS 히스토그램에 대한 역투영.
             frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             backproj = cv2.calcBackProject([frame_hsv], channels, hist, ranges, 1)
            #삭제
