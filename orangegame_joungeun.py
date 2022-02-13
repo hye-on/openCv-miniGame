@@ -3,8 +3,7 @@ import time
 from itertools import count
 import sys
 import numpy as np
-import cv2
-import time
+
 from datetime import datetime
 import threading  
 from matplotlib import pyplot as plt
