@@ -16,7 +16,8 @@ TIMER = int(5)
   
 # Open the camera
 cap = cv2.VideoCapture(0)
-  
+sum=0
+count=0
 
 
 #위치 바꾼부분
@@ -69,7 +70,6 @@ while True:
  
     # check for the key pressed
     k = cv2.waitKey(125)
- 
     # set the key for the countdown
     # to begin. Here we set q
     # if key pressed is q
@@ -182,14 +182,27 @@ while True:
             a=x2-x1
             b=y2-y1
 
-            test3 = "Distance: "+ str(math.sqrt((a*a)+(b*b)))
+            t3=math.sqrt((a*a)+(b*b))
+            
+            sum=sum+t3
+            count=count+1
+
+            test3 = "Distance: "+ str(t3)
             cv2.putText(img, test3, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
-           
+
             # 추적 결과 화면 출력
             cv2.rectangle(img, rc, (0, 0, 255), 2)
             cv2.rectangle(img, rc2, (0, 0, 255), 2)
             cv2.ellipse(img, ret, (0, 255, 0), 2)
             cv2.ellipse(img, ret2, (0, 255, 0), 2)
+            
+            # x키 누르면 손 사이 거리 평균 출력
+            if cv2.waitKey(1) & 0xFF == ord('x'):
+                test5=str(sum/count)
+                ret2, img1 = cap.read()
+                img1 = cv2.flip(img1,1)
+                cv2.putText(img1, test5, (100,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,255), 3)   
+                cv2.imshow('a1', img1)
            
             # Display the clicked frame for 2
             # sec.You can increase time in
@@ -198,14 +211,16 @@ while True:
  
             # time for which image displayed
             #cv2.waitKey(100)
- 
-        # Press Esc to exit
+             
+  # Press Esc to exit
+   
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 cap.release()
                 cv2.destroyAllWindows() 
                 break
- 
-    
+
+
 
     
 
