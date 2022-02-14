@@ -27,6 +27,7 @@ ret, frame = webcam.read()
 
 x, y, w, h = cv2.selectROI(frame)
 rc = (x, y, w, h)
+print(rc)
 
 if not ret:
     print('frame read failed!')

@@ -13,6 +13,42 @@ from matplotlib import pyplot as plt
 TIMER = int(5)
 
 
+def camshift(x1,y1,x2,y2):
+    
+    ret, img = cap.read()
+    rc = (x1+200, y1+120, 50 ,50)
+    #(268, 134, 127, 175)
+    #(100, 114, 151, 211)
+    print(rc)
+    roi = img[y1+120:y1+170, x1+200:x1+250]
+    roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+    # HS 히스토그램 계산
+    channels = [0, 1]
+    ranges = [0, 180, 0, 256]
+    hist = cv2.calcHist([roi_hsv], channels, None, [90, 128], ranges)
+   # hist2 = cv2.calcHist([roi_hsv2], channels, None, [90, 128], ranges)
+
+    # CamShift 알고리즘 종료 기준
+    term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+    while True:
+        ret, img = cap.read()
+        img = cv2.flip(img,1)
+       # cv2.rectangle(img, rc, (0, 0, 255), 2)
+        if not ret:
+            break
+        frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)      
+        backproj = cv2.calcBackProject([frame_hsv], channels, hist, ranges, 1)
+        ret, rc = cv2.CamShift(backproj, rc, term_crit)
+
+        cv2.rectangle(img, rc, (0, 0, 255), 2)
+        cv2.ellipse(img, ret, (0, 255, 0), 2)
+        cv2.imshow('a', img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+                cap.release()
+                cv2.destroyAllWindows() 
+                break
+    
+
 def drawBox(img, classId, conf, left, top, right, bottom):
     # Draw a bounding box.
     cv2.rectangle(img, (left, top), (right, bottom), colors[classId], 2)
@@ -68,6 +104,7 @@ cap = cv2.VideoCapture(0)
 
 ret, img = cap.read()
 
+count=0
 while cap.isOpened():
     ret, img = cap.read()
     img = cv2.flip(img,1)
@@ -76,11 +113,16 @@ while cap.isOpened():
     
     test="Please set the table so that you can see the cups, cell phones, spoons, and chopsticks. If you're ready, press s."
     cv2.putText(img, test, (120,100), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,0,0), 1) 
+    #객체 찾았으면 camshift
+    if count>0:
+        #cv2.rectangle(img, (x1,x2),(y1,y2), (0, 0, 255), 2)
+        camshift(x1,x2,y1,y2)
     cv2.imshow('a', img)
 
     
     k = cv2.waitKey(125)
     if k == ord('s'):
+        count=count+1
         prev = time.time()
         while True:
             blob = cv2.dnn.blobFromImage(img, swapRB=True)
@@ -126,10 +168,16 @@ while cap.isOpened():
                     roi = img[y1:y2+1, x1:x2+1][mask]
                     img[y1:y2+1, x1:x2+1][mask] = (0.7 * colors[classId] + 0.3 * roi).astype(np.uint8)
 
-            # 객체별 바운딩 박스 그리기 & 클래스 이름 표시
+            # 객체별 바운딩 박스 그리기 & 클래스 이름 표시 + 우리가 찾는 객체일때 roi에 저장
             for box in boxesToDraw:
                 drawBox(*box)
-
+                if classes[box[1]]=="person" or classes[box[1]]=="bottle":
+                    x1,x2,y1,y2= box[3], box[4], box[5], box[6]
+                    #roi = img[y1:y2, x1:x2]
+                    #rcTwo=(x1, x2, , y2)
+                   
+                   # print(roi)
+            
             t, _ = net.getPerfProfile()
             label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
             cv2.putText(img, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
@@ -144,11 +192,12 @@ while cap.isOpened():
                 break
            
             #cv2.waitKey()
+    
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                cap.release()
-                cv2.destroyAllWindows() 
-                break
+    if cv2.waitKey(1) & k == ord('q'):
+        cap.release()
+        cv2.destroyAllWindows() 
+        break
     
 
 # for f in img_files:
