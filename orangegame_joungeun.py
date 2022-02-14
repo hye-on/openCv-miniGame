@@ -159,6 +159,7 @@ while True:
             # HS 히스토그램에 대한 역투영
             frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             backproj = cv2.calcBackProject([frame_hsv], channels, hist, ranges, 1)
+            
            #삭제
             backproj2 = cv2.calcBackProject([frame_hsv], channels, hist2, ranges, 1)
 
@@ -171,6 +172,7 @@ while True:
             #rc 입력이자 출력
             ret, rc = cv2.CamShift(backproj, rc, term_crit)
             ret2, rc2 = cv2.CamShift(backproj2, rc2, term_crit)
+           
             # 추적 결과 화면 출력
             cv2.rectangle(img, rc, (0, 0, 255), 2)
             cv2.rectangle(img, rc2, (0, 0, 255), 2)
