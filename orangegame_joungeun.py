@@ -3,7 +3,7 @@ import time
 from itertools import count
 import sys
 import numpy as np
-
+import math
 from datetime import datetime
 import threading  
 from matplotlib import pyplot as plt
@@ -172,6 +172,18 @@ while True:
             #rc 입력이자 출력
             ret, rc = cv2.CamShift(backproj, rc, term_crit)
             ret2, rc2 = cv2.CamShift(backproj2, rc2, term_crit)
+            
+            #거리 출력
+            x1=ret[0][0]
+            y1=ret[0][1]
+            x2=ret2[0][0]
+            y2=ret2[0][1]
+
+            a=x2-x1
+            b=y2-y1
+
+            test3 = "Distance: "+ str(math.sqrt((a*a)+(b*b)))
+            cv2.putText(img, test3, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
            
             # 추적 결과 화면 출력
             cv2.rectangle(img, rc, (0, 0, 255), 2)
