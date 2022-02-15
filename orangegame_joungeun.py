@@ -198,10 +198,12 @@ while True:
             
             # x키 누르면 손 사이 거리 평균 출력
             if cv2.waitKey(1) & 0xFF == ord('x'):
-                test5=str(sum/count)
+                test5="This round: "
+                test6=str(sum/count)
                 ret2, img1 = cap.read()
                 img1 = cv2.flip(img1,1)
-                cv2.putText(img1, test5, (100,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,255), 3)   
+                cv2.putText(img1, test5, (150,100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,255), 3)
+                cv2.putText(img1, test6, (5,200), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,255), 3)   
                 cv2.imshow('a1', img1)
            
             # Display the clicked frame for 2
