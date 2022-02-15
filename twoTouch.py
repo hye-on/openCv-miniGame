@@ -16,11 +16,16 @@ TIMER = int(5)
 def camshift(x1,y1,x2,y2):
     
     ret, img = cap.read()
-    rc = (x1+200, y1+120, 50 ,50)
+   # a=(x1,y1,x2,y2)
+   # print(a)
+    w=50
+    h=50
+    rc = (x1+40, y1+20, w ,h)
+    b= (x1+40, y1+20, 50 ,50)
     #(268, 134, 127, 175)
     #(100, 114, 151, 211)
     print(rc)
-    roi = img[y1+120:y1+170, x1+200:x1+250]
+    roi = img[y1+20:y1+20+h,x1+40:x1+40+w]
     roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     # HS 히스토그램 계산
     channels = [0, 1]
@@ -39,7 +44,7 @@ def camshift(x1,y1,x2,y2):
         frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)      
         backproj = cv2.calcBackProject([frame_hsv], channels, hist, ranges, 1)
         ret, rc = cv2.CamShift(backproj, rc, term_crit)
-
+        cv2.rectangle(img, b, (0, 255, 255), 2)
         cv2.rectangle(img, rc, (0, 0, 255), 2)
         cv2.ellipse(img, ret, (0, 255, 0), 2)
         cv2.imshow('a', img)
@@ -122,7 +127,7 @@ while cap.isOpened():
     
     k = cv2.waitKey(125)
     if k == ord('s'):
-        count=count+1
+        
         prev = time.time()
         while True:
             blob = cv2.dnn.blobFromImage(img, swapRB=True)
@@ -171,7 +176,8 @@ while cap.isOpened():
             # 객체별 바운딩 박스 그리기 & 클래스 이름 표시 + 우리가 찾는 객체일때 roi에 저장
             for box in boxesToDraw:
                 drawBox(*box)
-                if classes[box[1]]=="person" or classes[box[1]]=="bottle":
+                if classes[box[1]]=="bowl" or classes[box[1]]=="cup" :
+                    count=count+1
                     x1,x2,y1,y2= box[3], box[4], box[5], box[6]
                     #roi = img[y1:y2, x1:x2]
                     #rcTwo=(x1, x2, , y2)
