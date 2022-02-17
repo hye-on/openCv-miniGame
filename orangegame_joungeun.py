@@ -18,7 +18,8 @@ TIMER = int(5)
 cap = cv2.VideoCapture(0)
 sum=0
 count=0
-
+i=1
+test6=[0,0,0,0,0,0,0,0,0,0]
 # 얼굴로 거리 측정.
 Known_distance = 60  # centimeter
 Known_width = 14.3
@@ -178,6 +179,19 @@ while True:
             hand_width=rc[3]
             hand_width2=rc2[3]
 
+             #거리 출력
+            x1=ret[0][0]
+            y1=ret[0][1]
+            x2=ret2[0][0]
+            y2=ret2[0][1]
+
+            a=x2-x1
+            b=y2-y1
+
+            t3=math.sqrt((a*a)+(b*b))
+
+            test3 = "Distance: "+ str(t3)
+
             # finding the distance by calling function Distance finder
             #if face_width_in_frame != 0:
             Distance = Distance_finder(Focal_length_found, Known_width, face_width_in_frame)
@@ -188,34 +202,44 @@ while True:
 
             rd=math.sqrt(abs((hD*hD)-(Distance*Distance)))+math.sqrt(abs((hD2*hD2)-(Distance*Distance)))
 
-            test3 = "Distance: "+ str(rd)
+            #test3 = "Distance: "+ str(rd)
             cv2.putText(img, test3, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
 
             # Drwaing Text on the screen
             #cv2.putText(img, f"Distance = {Distance}",
                     #(50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-            sum=sum+rd
+            sum=sum+t3
             count=count+1
-            test6=[0,0,0,0,0,0,0,0,0,0]
-            i=1
+            
+            i2=0
             # x키 누르면 손 사이 거리 평균 출력
             if cv2.waitKey(1) & 0xFF == ord('x'):
-                i+=1 
-                test5="This round: "
-                test6[i]=sum/count
-                print(test6)
-                if test6[i-1] < test6[i]:
+                while i2<1:
+                 test5="This round "
+                 test6[i]=sum/count
+                 print("i")
+                 print(i)
+                 print("test6[i-1]")
+                 print(test6[i-1])
+                 print("test6[i]")
+                 print(test6[i])
+                 i2+=1
+                 if test6[i-1] > test6[i]:
                     ret2, img1 = cap.read()
                     fail="Fail!"
                     cv2.putText(img1, fail, (150,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (0,255,255), 5)
                     cv2.imshow('a1', img1)
+                    i+=1
 
-                else:
+                 else:
                     ret2, img1 = cap.read()
                     img1 = cv2.flip(img1,1)
-                    cv2.putText(img1, test5, (150,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 1)
-                    cv2.putText(img1, str(test6[i]), (5,200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 1)   
+                    cv2.putText(img1, test5, (220,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
+                    cv2.putText(img1, str(test6[i]), (150,200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)   
                     cv2.imshow('a1', img1)
+                    i+=1
+                      
+                   
            
             # Display the clicked frame for 2
             # sec.You can increase time in
