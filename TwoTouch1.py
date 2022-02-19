@@ -24,19 +24,37 @@ while(True):
 
     ret,bbox=tracker.update(cam)  
     print(bbox)
-
+    cnt=0
     if ret:
         drawBox(cam,bbox)
-        cnt=0
-        if bbox[1]>=300:        #Problem1 bbox[1]은 y좌표는 좌측 상단이라 내가 원하는 좌우측 하단 y좌표가 필요
-                                       #문제 해결시 기준 값을 460으로 수정 
+        cnt=cnt
+        if int(bbox[1]+bbox[3])>=460:                        
             #300(파란색)을 기준으로 touch/ not touch를 구분
             cv2.putText(cam,"Touch!",(50,75),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
-            cnt+=1
+            cnt=cnt+1
             cv2.putText(cam,str(cnt),(50,95),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
-            int(cnt)   #Problem2  숫자가 1이상 올라가지 않는다
+            cnt=int(cnt)
+
+            #success/fail
+            '''
+            if cnt%2==0:
+                cv2.putText(cam,"SUCCESS!",(50,115),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            else:
+                cv2.putText(cam,"FAIL",(50,115),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            '''
         else:
+            cnt=cnt
             cv2.putText(cam,"NOT Touched!",(50,75),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            cv2.putText(cam,str(cnt),(50,95),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            cnt=int(cnt)
+            #success/fail
+            '''
+            if cnt%2==0:
+                cv2.putText(cam,"SUCCESS!",(50,115),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            else:
+                cv2.putText(cam,"FAIL",(50,115),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+            '''
+            
     else:
         cv2.putText(cam,"Touch the line twice",(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
         cv2.putText(cam,"Lost",(50,75),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
@@ -44,7 +62,6 @@ while(True):
     fps = cv2.getTickFrequency()/(cv2.getTickCount()-timer)
     #cv2.putText(cam,str(int(fps)),(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
     cv2.namedWindow("Tracking object", cv2.WINDOW_NORMAL)  #Tracking object 창 크기 조절
-    cv2.line(cam,(30,300),(600,300),(255,0,0),4)
     cv2.line(cam,(30,460),(600,460),(255,255,255),4)
     cv2.imshow("Tracking object", cam)
          
