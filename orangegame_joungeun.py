@@ -13,6 +13,7 @@ from matplotlib import pyplot as plt
 # for simplicity we set it to 3
 # We can also take this as input
 TIMER = int(5)
+TIMER2 =int(3)
   
 # Open the camera
 cap = cv2.VideoCapture(0)
@@ -145,8 +146,9 @@ while True:
 
              
                 
-
+        prev2 = time.time()
         while TIMER < 0:
+           
             ret, img = cap.read()
             ret2=ret
             img = cv2.flip(img,1)
@@ -204,16 +206,24 @@ while True:
 
             #test3 = "Distance: "+ str(rd)
             cv2.putText(img, test3, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
-
+            cv2.putText(img, str(TIMER2),
+                        (270, 300), font,
+                        4, (255, 255, 0),
+                        2)
             # Drwaing Text on the screen
             #cv2.putText(img, f"Distance = {Distance}",
                     #(50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
             sum=sum+t3
             count=count+1
-            
+            cur2 = time.time()
+            if cur2-prev2 >= 1:
+                prev2 = cur2
+                TIMER2 = TIMER2-1
+                print(TIMER2)
             i2=0
             # x키 누르면 손 사이 거리 평균 출력
-            if cv2.waitKey(1) & 0xFF == ord('x'):
+            #if cv2.waitKey(1) & 0xFF == ord('x'):
+            if TIMER2 < 0 :
                 while i2<1:
                  test5="This round "
                  test6[i]=sum/count
@@ -238,6 +248,8 @@ while True:
                     cv2.putText(img1, str(test6[i]), (150,200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)   
                     cv2.imshow('a1', img1)
                     i+=1
+                    TIMER2=3
+            
                       
                    
            
