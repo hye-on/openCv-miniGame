@@ -19,7 +19,7 @@ TIMER2 =int(3)
 cap = cv2.VideoCapture(0)
 sum=0
 count=0
-i=1
+i=0
 test6=[0,0,0,0,0,0,0,0,0,0]
 # 얼굴로 거리 측정.
 Known_distance = 60  # centimeter
@@ -53,7 +53,7 @@ ref_image = cv2.imread("Ref_image.jpg")
 
 ref_image_face_width = face_data(ref_image)
 Focal_length_found = FocalLength(Known_distance, Known_width, ref_image_face_width)
-print(Focal_length_found)
+#print(Focal_length_found)
 #cv2.imshow("Ref_image", ref_image)
 
 #위치 바꾼부분
@@ -64,7 +64,7 @@ x2, y2, w2, h2 =370, 220 , 100, 100
 rc2 = (x2, y2, w2, h2) 
 
 ret, img = cap.read()
-
+preRd=0
 while True:
 
     # x, y, w, h =115, 220, 50, 50
@@ -178,19 +178,19 @@ while True:
             #_, frame = cap.read()
 
             face_width_in_frame = face_data(img)
-            hand_width=rc[3]
-            hand_width2=rc2[3]
+            hand_width=rc[3] # 손1의 가로길이
+            hand_width2=rc2[3] # 손2의 가로길이
 
              #거리 출력
-            x1=ret[0][0]
-            y1=ret[0][1]
-            x2=ret2[0][0]
-            y2=ret2[0][1]
+            x1=ret[0][0]#손1의 타원의 x좌표
+            y1=ret[0][1]#손1의 타원의 y좌표
+            x2=ret2[0][0]#손2의 타원의 x좌표
+            y2=ret2[0][1]#x손2의 타원의 y좌표
 
             a=x2-x1
             b=y2-y1
 
-            t3=math.sqrt((a*a)+(b*b))
+            t3=math.sqrt((a*a)+(b*b)) # 손과 손 사이의 거리
 
             test3 = "Distance: "+ str(t3)
 
@@ -199,13 +199,23 @@ while True:
             Distance = Distance_finder(Focal_length_found, Known_width, face_width_in_frame)
             hD=Distance_finder(Focal_length_found, Known_width, hand_width)
             hD2=Distance_finder(Focal_length_found, Known_width, hand_width2)
-            print(hD)
-            print(hD2)
+          #  print(hD)
+          #  print(hD2)
 
+
+            cur2 = time.time()
+            if cur2-prev2 >= 1:
+                prev2 = cur2
+                TIMER2 = TIMER2-1
+                #print(TIMER2)
             rd=math.sqrt(abs((hD*hD)-(Distance*Distance)))+math.sqrt(abs((hD2*hD2)-(Distance*Distance)))
-
+           # sum=sum+ rd
+           # count=count+1
+            
+           
+            rd2="Distance: "+ str(rd)
             #test3 = "Distance: "+ str(rd)
-            cv2.putText(img, test3, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
+            cv2.putText(img, rd2, (60,60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,0,255), 1)
             cv2.putText(img, str(TIMER2),
                         (270, 300), font,
                         4, (255, 255, 0),
@@ -213,42 +223,47 @@ while True:
             # Drwaing Text on the screen
             #cv2.putText(img, f"Distance = {Distance}",
                     #(50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-            sum=sum+t3
-            count=count+1
-            cur2 = time.time()
-            if cur2-prev2 >= 1:
-                prev2 = cur2
-                TIMER2 = TIMER2-1
-                print(TIMER2)
+         
+            
+           
             i2=0
-            # x키 누르면 손 사이 거리 평균 출력
+            # x키 누르면 손 사이 거리 평균 출력 ->x
+            #3초 지나면 자동 측정
             #if cv2.waitKey(1) & 0xFF == ord('x'):
-            if TIMER2 < 0 :
+            if TIMER2 < 0 & TIMER2>-2 :
+               
                 while i2<1:
-                 test5="This round "
-                 test6[i]=sum/count
-                 print("i")
-                 print(i)
-                 print("test6[i-1]")
-                 print(test6[i-1])
-                 print("test6[i]")
-                 print(test6[i])
-                 i2+=1
-                 if test6[i-1] > test6[i]:
-                    ret2, img1 = cap.read()
-                    fail="Fail!"
-                    cv2.putText(img1, fail, (150,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (0,255,255), 5)
-                    cv2.imshow('a1', img1)
-                    i+=1
+                    test5="This round : "+str(i+1)
+                   # test6[i]=sum/count
+                   # print(str(sum)+"   "+str(count))
+                # print("i")
+                # print(i)
+                # print("test6[i-1]")
+                # print(test6[i-1])
+                # print("test6[i]")
+                # print(test6[i])
+                    i2+=2
+                    
+                    if preRd > rd:
+                        ret2, img1 = cap.read()
+                        fail="Fail!"
+                        cv2.putText(img1, fail , (150,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (0,255,255), 5)
+                        cv2.putText(img1,str(rd)+"  " +str(preRd), (150,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (0,255,255), 5)
+                        #sum count초기화
+                        
+                        cv2.imshow('a1', img1)
+                        i+=1
 
-                 else:
-                    ret2, img1 = cap.read()
-                    img1 = cv2.flip(img1,1)
-                    cv2.putText(img1, test5, (220,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
-                    cv2.putText(img1, str(test6[i]), (150,200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)   
-                    cv2.imshow('a1', img1)
-                    i+=1
-                    TIMER2=3
+                    else:
+                        TIMER2=3
+                        ret2, img1 = cap.read()
+                        img1 = cv2.flip(img1,1)
+                        cv2.putText(img1, test5, (220,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
+                        cv2.putText(img1, str(rd), (150,200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)   
+                        cv2.imshow('a1', img1)
+                        preRd=rd
+                        i+=1
+                        
             
                       
                    
@@ -268,8 +283,8 @@ while True:
                 break
 
 # close the camera
-cap.release()
-  
-# close all the opened windows
-cv2.destroyAllWindows()    
+    # cap.release()
+    
+    # # close all the opened windows
+    # cv2.destroyAllWindows()    
 
