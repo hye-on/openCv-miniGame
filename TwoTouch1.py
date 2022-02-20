@@ -1,3 +1,5 @@
+from configparser import LegacyInterpolation
+import importlib
 import cv2
 
 cap = cv2.VideoCapture(0)
@@ -18,6 +20,7 @@ def drawBox(cam,bbox):
 
     cv2.rectangle(cam,(x,y),((x+w),(y+h)),(255,0,255),3,1)
     cv2.putText(cam,"Touch the line twice",(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
+check=True
 while(True):
     timer = cv2.getTickCount()
     ret, cam = cap.read()
@@ -26,10 +29,13 @@ while(True):
    
     if ret:
         drawBox(cam,bbox)
-        if int(bbox[1]+bbox[3])>=460:                        
+        if int(bbox[1]+bbox[3])<=460 & check:
+                                 
             #300(파란색)을 기준으로 touch/ not touch를 구분
             cv2.putText(cam,"Touch!",(50,75),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
-            cnt=cnt+1  #터치를 했다고 간주하며 카운팅 값을 1증가시킨다
+            if check:
+                cnt=cnt+1  #터치를 했다고 간주하며 카운팅 값을 1증가시킨다
+                check=False 
             cv2.putText(cam,str(cnt),(50,95),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
             cnt=int(cnt)  
             #success/fail
@@ -44,6 +50,7 @@ while(True):
                
         else:
             cnt=cnt
+            check=True
             cv2.putText(cam,"NOT Touched!",(50,75),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2) #닿지 않았다면
             cv2.putText(cam,str(cnt),(50,95),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,255,0),2)
             cnt=int(cnt)
@@ -65,6 +72,7 @@ while(True):
     #cv2.putText(cam,str(int(fps)),(50,50),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
     cv2.namedWindow("Tracking object", cv2.WINDOW_NORMAL)  #Tracking object 창 크기 조절
     cv2.line(cam,(30,460),(600,460),(255,255,255),4)
+   
     cv2.imshow("Tracking object", cam)
          
         
