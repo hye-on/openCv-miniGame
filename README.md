@@ -1,0 +1,35 @@
+# openCv-miniGame
+## OpenCV 라이브러리를 이용한 미니게임입니다.
+### *패스트캠퍼스의 <OpenCV를 활용한 컴퓨터비전과 딥러닝> 강의의 소스코드와 강의자료를 참고하였습니다.
+### [시연영상 링크](https://drive.google.com/drive/folders/1Bxmma6ZiZKWNQMZqjNhdXYIazd4N2Bi4?usp=share_link)
+#### * 필자의 얼굴만 나온 시연 영상만 업로드 하였습니다. (다른 팀원들의 얼굴과 강사님의 얼굴은 나오지 않았습니다. )
+#### * 9번째 슬라이드 첫번째 영상, 15번째 슬라이드 영상, 21번째 슬라이드 영상을 보실 수 있습니다.
+
+![atoi opencv 미니게임 프로젝트_1](https://user-images.githubusercontent.com/68319395/215007790-8fc6564e-429f-480d-a565-d5f57e07b0c2.jpg)
+![atoi opencv 미니게임 프로젝트_2](https://user-images.githubusercontent.com/68319395/215007791-eee7afb2-f625-4619-a876-1d1b9f863944.jpg)
+![atoi opencv 미니게임 프로젝트_3](https://user-images.githubusercontent.com/68319395/215007794-d5e962cb-7637-4b02-82c1-344ea904ceac.jpg)
+![atoi opencv 미니게임 프로젝트_4](https://user-images.githubusercontent.com/68319395/215007796-def449e1-b5ea-4ea5-a758-a403301d3470.jpg)
+![atoi opencv 미니게임 프로젝트_5](https://user-images.githubusercontent.com/68319395/215007797-6d509730-1d9f-40e7-ad6f-dd9ed81ee6bf.jpg)
+![atoi opencv 미니게임 프로젝트_6](https://user-images.githubusercontent.com/68319395/215007800-de7d0d04-931a-46b0-a36f-77902725f067.jpg)
+![atoi opencv 미니게임 프로젝트_7](https://user-images.githubusercontent.com/68319395/215007801-5c55bd48-5340-4e67-ab97-db7bd8170360.jpg)
+![atoi opencv 미니게임 프로젝트_8](https://user-images.githubusercontent.com/68319395/215007802-3a7b32d9-1447-40c4-9b4f-8631866f0e14.jpg)
+![atoi opencv 미니게임 프로젝트_9](https://user-images.githubusercontent.com/68319395/215007803-9ce25c32-39a1-4efc-a861-4d14358ee669.jpg)
+![atoi opencv 미니게임 프로젝트_10](https://user-images.githubusercontent.com/68319395/215007804-6f4d7ada-a352-42df-97f7-66c4ca8cf465.jpg)
+![atoi opencv 미니게임 프로젝트_11](https://user-images.githubusercontent.com/68319395/215007806-0c4c9942-fbd0-43eb-bb8f-b862f58838be.jpg)
+![atoi opencv 미니게임 프로젝트_12](https://user-images.githubusercontent.com/68319395/215007808-f4d9a3a3-5203-4322-9cd3-4b47b014b051.jpg)
+![atoi opencv 미니게임 프로젝트_13](https://user-images.githubusercontent.com/68319395/215008582-a0e153dc-d499-48a6-bfae-bb3073071353.jpg)
+![atoi opencv 미니게임 프로젝트_14](https://user-images.githubusercontent.com/68319395/215007810-32de3315-14ab-4970-841c-848f5b2748a7.jpg)
+![atoi opencv 미니게임 프로젝트_15](https://user-images.githubusercontent.com/68319395/215007813-2906d31b-6243-44d0-abe4-4dc70f8cfe7f.jpg)
+![atoi opencv 미니게임 프로젝트_16](https://user-images.githubusercontent.com/68319395/215007816-1b029c75-a033-413f-89c7-bcf39840d700.jpg)
+![atoi opencv 미니게임 프로젝트_17](https://user-images.githubusercontent.com/68319395/215007819-8a1efeac-dcf9-4e67-abc2-729ed5568bef.jpg)
+![atoi opencv 미니게임 프로젝트_18](https://user-images.githubusercontent.com/68319395/215007821-a4bcab5d-a019-4e50-9057-3e72d03599d8.jpg)
+![atoi opencv 미니게임 프로젝트_19](https://user-images.githubusercontent.com/68319395/215007822-62c646bf-eda5-4c21-99a6-f3cc81845884.jpg)
+![atoi opencv 미니게임 프로젝트_20](https://user-images.githubusercontent.com/68319395/215007824-b59662c1-34bb-4fa5-a01c-ecadfa67831f.jpg)
+![atoi opencv 미니게임 프로젝트_21](https://user-images.githubusercontent.com/68319395/215007825-ba642eb0-a3e6-42ad-8d66-82fb5f7e55f9.jpg)
+![atoi opencv 미니게임 프로젝트_22](https://user-images.githubusercontent.com/68319395/215007827-4e2f8cdb-97b1-4937-9cb9-c420777ef042.jpg)
+![atoi opencv 미니게임 프로젝트_23](https://user-images.githubusercontent.com/68319395/215007828-21502bc4-50fe-4825-819a-1b144f4670aa.jpg)
+![atoi opencv 미니게임 프로젝트_24](https://user-images.githubusercontent.com/68319395/215007829-12b42e92-8de7-4dbb-814e-00f853bfb58a.jpg)
+![atoi opencv 미니게임 프로젝트_25](https://user-images.githubusercontent.com/68319395/215007832-504c2e35-f93c-499b-bda4-c78b13cfef3d.jpg)
+![atoi opencv 미니게임 프로젝트_26](https://user-images.githubusercontent.com/68319395/215007833-e888ceca-2c4e-42ee-aa52-436b51a1ec04.jpg)
+![atoi opencv 미니게임 프로젝트_27](https://user-images.githubusercontent.com/68319395/215007834-798cf5bd-31a0-434a-82ed-1d42de349aaa.jpg)
+
